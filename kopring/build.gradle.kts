@@ -24,11 +24,18 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
+    // 쿼리파라미터 로그확인용 외부 라이브러리
+    implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0")
+
 
     runtimeOnly("com.h2database:h2")
 
     testImplementation("com.h2database:h2:2.1.210")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
+    testImplementation("io.kotest:kotest-runner-junit5:5.2.3")
+    testImplementation("io.kotest:kotest-assertions-core:5.2.3")
+    testImplementation("io.kotest:kotest-property:5.2.3")
 }
 
 tasks.withType<KotlinCompile> {

@@ -21,3 +21,8 @@ logging.level:
   org.hibernate.SQL: debug
 #  org.hibernate.SQL: trace
 #  org.hibernate.type: trace
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true  # 기본이 true이다. 운영에선 false로 반드시 잡아야한다.

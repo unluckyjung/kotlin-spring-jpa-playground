@@ -2,6 +2,7 @@ package com.example.kopring.member.domain
 
 import com.example.kopring.BaseEntity
 import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import javax.persistence.*
 
 @Entity
@@ -12,11 +13,11 @@ class Member(
     val id: Long? = null,
     val name: String,
 
-    createdAt: LocalDateTime
+    createdAt: ZonedDateTime
 ) : BaseEntity(createdAt = createdAt) {
     constructor(
         name: String,
         id: Long = 0L,
-        createdAt: LocalDateTime = LocalDateTime.now()
+        createdAt: ZonedDateTime = ZonedDateTime.now()
     ) : this(id, name, createdAt)
 }

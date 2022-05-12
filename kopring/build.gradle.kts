@@ -30,7 +30,6 @@ dependencies {
 
     runtimeOnly("com.h2database:h2")
 
-    testImplementation("com.h2database:h2:2.1.210")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
     testImplementation("io.kotest:kotest-runner-junit5:5.2.3")

@@ -3,6 +3,8 @@ package com.example.kopring.member.domain
 import com.example.kopring.test.RepositoryTest
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.mockk.every
+import io.mockk.spyk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -53,5 +55,31 @@ class MemberRepositoryTest(
 
         member1.createdAt shouldNotBe ZonedDateTime.now()
         member1.createdAt shouldBe inputKoreaTime
+    }
+
+    @DisplayName("prePersist() 메소드를 spyk 를 이용하여 mocking 하면, 영속화가 되어도 모킹한 시간이 유지된다.")
+    @Test
+    fun spyMockTest() {
+        val inputKoreaTime = ZonedDateTime.of(
+            LocalDateTime.of(2222, 2, 2, 2, 2), ZoneId.of("Asia/Seoul")
+        )
+
+        // 유일하게 되는 방법
+        val spyMember1: Member = spyk {
+            every { prePersist() } answers {
+                createdAt = inputKoreaTime
+            }
+        }
+        val savedMember = memberRepository.save(spyMember1)
+
+        // 실패, Member의 프로퍼티를 생성자로 못정해주는 상황.
+        val spyMember2: Member = spyk(Member("jys", createdAt = inputKoreaTime)) {
+            every { prePersist() } answers {
+                createdAt = inputKoreaTime
+            }
+        }
+        memberRepository.save(spyMember2)   // inputKoreaTime이 아닌, now()로 시간이 저장된다.
+
+        savedMember.createdAt shouldBe inputKoreaTime
     }
 }

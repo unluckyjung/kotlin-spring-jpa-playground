@@ -1,7 +1,6 @@
 package com.example.kopring.member.domain
 
 import com.example.kopring.BaseEntity
-import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import javax.persistence.*
 

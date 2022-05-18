@@ -6,17 +6,10 @@ import javax.persistence.*
 
 @Entity
 class Member(
+    val name: String,
+    createdAt: ZonedDateTime = ZonedDateTime.now(),
 
     @Column(name = "member_id")
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
-    val name: String,
-
-    createdAt: ZonedDateTime
-) : BaseEntity(createdAt = createdAt) {
-    constructor(
-        name: String,
-        id: Long = 0L,
-        createdAt: ZonedDateTime = ZonedDateTime.now()
-    ) : this(id, name, createdAt)
-}
+    val id: Long = 0L
+) : BaseEntity(createdAt = createdAt)

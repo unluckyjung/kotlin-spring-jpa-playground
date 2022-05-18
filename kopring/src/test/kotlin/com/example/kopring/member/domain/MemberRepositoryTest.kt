@@ -4,11 +4,14 @@ import com.example.kopring.test.RepositoryTest
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
+import io.mockk.mockkStatic
 import io.mockk.spyk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -30,7 +33,7 @@ class MemberRepositoryTest(
     @DisplayName("멤버가 최초로 저장되면, id로 조회했을때 조회된다.")
     @Test
     fun memberGetByIdTest() {
-        val member1 = memberRepository.getByMemberId(member.id!!)
+        val member1 = memberRepository.findByMemberId(member.id)
         member1 shouldBe member
     }
 
@@ -38,7 +41,7 @@ class MemberRepositoryTest(
     @Test
     fun memberGetByIdFailTest() {
         assertThrows<NoSuchElementException> {
-            memberRepository.getByMemberId(100L)
+            memberRepository.findByMemberId(100L)
         }
     }
 
@@ -64,22 +67,30 @@ class MemberRepositoryTest(
             LocalDateTime.of(2222, 2, 2, 2, 2), ZoneId.of("Asia/Seoul")
         )
 
-        // 유일하게 되는 방법
-        val spyMember1: Member = spyk {
+        val spyMember: Member = spyk(Member("jys")) {
             every { prePersist() } answers {
                 createdAt = inputKoreaTime
             }
         }
-        val savedMember = memberRepository.save(spyMember1)
-
-        // 실패, Member의 프로퍼티를 생성자로 못정해주는 상황.
-        val spyMember2: Member = spyk(Member("jys", createdAt = inputKoreaTime)) {
-            every { prePersist() } answers {
-                createdAt = inputKoreaTime
-            }
-        }
-        memberRepository.save(spyMember2)   // inputKoreaTime이 아닌, now()로 시간이 저장된다.
+        val savedMember = memberRepository.save(spyMember)   // inputKoreaTime이 아닌, now()로 시간이 저장된다.
 
         savedMember.createdAt shouldBe inputKoreaTime
+    }
+
+    @DisplayName("ZonedDateTime.now()를 static mocking 이용해 시간을 더해주면, 더해준 시간으로 반환된다.")
+    @ParameterizedTest
+    @ValueSource(longs = [1, 2, 3, 4])
+    fun zoneDateTimeMockingTest(plusDay: Long) {
+        val inputKoreaTime = ZonedDateTime.of(
+            LocalDateTime.of(2222, 2, 2, 2, 2), ZoneId.of("Asia/Seoul")
+        )
+
+        mockkStatic(ZonedDateTime::class)
+        every {
+            ZonedDateTime.now()
+        }.returns(inputKoreaTime.plusDays(plusDay))
+        val savedMember = memberRepository.save(Member("unluckyjung"))
+
+        savedMember.createdAt shouldBe inputKoreaTime.plusDays(plusDay)
     }
 }

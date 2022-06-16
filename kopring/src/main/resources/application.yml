@@ -17,8 +17,8 @@ spring:
         format_sql: true
 #        show-sql: true
 
-logging.level:
-  org.hibernate.SQL: debug
+#logging.level:
+#  org.hibernate.SQL: debug
 #  org.hibernate.SQL: trace
 #  org.hibernate.type: trace
 

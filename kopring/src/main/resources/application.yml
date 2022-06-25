@@ -1,4 +1,3 @@
-
 spring:
   datasource:
     url: jdbc:h2:~/test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
@@ -26,3 +25,11 @@ decorator:
   datasource:
     p6spy:
       enable-logging: true  # 기본이 true이다. 운영에선 false로 반드시 잡아야한다.
+
+
+sampleValue:
+  name: unluckyjung
+  age: 30
+  nullValue:
+  phoneNumber: "123-456-789"
+  bookList: A,B,C

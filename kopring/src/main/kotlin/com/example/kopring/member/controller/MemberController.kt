@@ -2,6 +2,7 @@ package com.example.kopring.member.controller
 
 import com.example.kopring.member.dto.MemberTestDto
 import com.example.kopring.member.dto.MemberValidationGroup
+import com.example.kopring.member.service.MemberService
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
@@ -9,10 +10,12 @@ import javax.validation.constraints.Min
 
 @RestController
 @RequestMapping("api/v1/member/")
-//@Validated
-class MemberController {
+@Validated
+class MemberController(
+    val memberService: MemberService
+) {
     @GetMapping("valid-get-controller")
-    // @Valid는 그룹이 안잡혀있는것만 체크, 즉 전부 통과
+    // @Valid는 그룹이 안잡혀있는것만 체크
     fun getMemberInfoValid(@Valid @RequestBody memberReq: MemberTestDto): String {
         return """
             name: ${memberReq.name}
@@ -22,6 +25,7 @@ class MemberController {
 
     @GetMapping("validated-get-controller")
     fun getMemberInfoValidated(
+        // 그룹화 된부분 검사 -> 400 에러
         @Validated(MemberValidationGroup.AgeCheck::class)
         @RequestBody memberReq: MemberTestDto
     ): String {
@@ -41,5 +45,10 @@ class MemberController {
         return """
             age: $age
         """.trimIndent()
+    }
+
+    @GetMapping("validated-service-layer")
+    fun getValidatedService(@RequestBody memberReq: MemberTestDto): String {
+        return memberService.validateTest(memberReq)
     }
 }

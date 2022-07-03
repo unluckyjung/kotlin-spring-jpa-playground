@@ -47,6 +47,17 @@ class MemberController(
         """.trimIndent()
     }
 
+    @GetMapping("validated-get-param2")
+    fun getMemberInfoValidatedParam2(
+        @Valid @RequestBody memberReq: MemberTestDto,
+        @Min(value = 20, message = "나이는 20살이상 이여야 합니다.")
+        @RequestParam age: Int,
+    ): String {
+        return """
+            age: $age
+        """.trimIndent()
+    }
+
     @GetMapping("validated-service-layer")
     fun getValidatedService(@RequestBody memberReq: MemberTestDto): String {
         return memberService.validateTest(memberReq)

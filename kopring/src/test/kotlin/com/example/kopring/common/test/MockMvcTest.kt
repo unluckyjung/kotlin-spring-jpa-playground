@@ -63,6 +63,7 @@ class MockMvcTest(
         val request = Request(28, "goodall")
 
         // object to json
+        // TODO: https://jojoldu.tistory.com/478 요방법도 가능한거 같은데 두개 차이점 나중에 확인
         val jsonBody = jacksonObjectMapper().writeValueAsString(request)
 
         mockMvc.perform(

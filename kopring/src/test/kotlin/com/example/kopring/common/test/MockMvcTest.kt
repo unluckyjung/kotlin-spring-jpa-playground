@@ -1,10 +1,9 @@
 package com.example.kopring.common.test
 
+import com.example.kopring.test.IntegrationTest
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
@@ -17,13 +16,14 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.bind.annotation.*
 
-@SpringBootTest // JPA Auditing 때문에 @WebMvcTest 대신 사용
+@IntegrationTest // JPA Auditing 때문에 @WebMvcTest 대신 @SpringBootTest 사용
 @AutoConfigureMockMvc
-class MockMvcTest {
+class MockMvcTest(
+    val mockMvc: MockMvc
+) {
 
-    // kopring도 생성자에서 처리 불가능
-    @Autowired
-    lateinit var mockMvc: MockMvc
+//    @Autowired
+//    lateinit var mockMvc: MockMvc
 
     @Test
     fun helloTest() {

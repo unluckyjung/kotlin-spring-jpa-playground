@@ -6,10 +6,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
 class WebMvcConfig(
-    private val pagingInterceptor: PagingInterceptor
+    private val cursorInterceptor: CursorInterceptor
 ) : WebMvcConfigurer {
 
     override fun addInterceptors(registry: InterceptorRegistry) {
-        registry.addInterceptor(pagingInterceptor)
+        registry.addInterceptor(cursorInterceptor)
     }
 }

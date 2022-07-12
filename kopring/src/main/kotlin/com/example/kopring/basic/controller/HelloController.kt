@@ -11,13 +11,13 @@ class HelloController {
 
     @GetMapping("query-param")
     fun hello(
-        @RequestParam(required = false, defaultValue = "") cursorValue: String,
-        @RequestParam(required = false, defaultValue = "") cursorUUid: String,
+        @RequestParam(required = false, defaultValue = "") cursorValue: Int,
+        @RequestParam(required = false, defaultValue = "") cursorUuid: String,
     ): String {
-        cursorUUid.isBlank()
+        cursorUuid.isBlank()
         return """
             cursorValue: $cursorValue
-            cursorUuid: $cursorUUid
+            cursorUuid: $cursorUuid
         """.trimIndent()
     }
 }

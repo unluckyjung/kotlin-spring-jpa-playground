@@ -7,10 +7,12 @@ import javax.validation.constraints.NotBlank
 
 @Entity
 class Member(
+
+    @Column(name = "member_name", nullable = false)
     val name: String,
     createdAt: ZonedDateTime = ZonedDateTime.now(),
 
-    @Column(name = "member_id")
+    @Column(name = "member_id", nullable = false)
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
 ) : BaseEntity(createdAt = createdAt) {

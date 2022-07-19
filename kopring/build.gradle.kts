@@ -27,6 +27,7 @@ dependencies {
     // 쿼리파라미터 로그확인용 외부 라이브러리
     implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0")
 
+    implementation("org.flywaydb:flyway-core:8.5.12")
 
     runtimeOnly("com.h2database:h2")
 

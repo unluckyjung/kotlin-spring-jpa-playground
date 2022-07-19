@@ -6,6 +6,7 @@ import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 
 @IntegrationTest
@@ -46,6 +47,16 @@ class CacheTest(
         dummyService.eraseCache("goodall")
         cachedValue shouldNotBe dummyService.cachedFun("goodall")
     }
+
+    @Test
+    fun cacheAutoEraseTest() {
+        val cachedValue = dummyService.cachedFun3("goodall")
+        cachedValue shouldBe dummyService.cachedFun3("goodall")
+
+        Thread.sleep(2000)
+
+        cachedValue shouldNotBe dummyService.cachedFun3("goodall")
+    }
 }
 
 @Service
@@ -62,8 +73,18 @@ class DummyService {
         return Response(name)
     }
 
+    @Cacheable(value = ["cacheTest3"]) // 파라메터가 하나만 있는경우 key값을 명시해주지 않아도 된다.
+    fun cachedFun3(name: String): Response {
+        return Response(name)
+    }
+
     @CacheEvict(value = ["cacheTest"])
     fun eraseCache(name: String) {
+    }
+
+    @CacheEvict(cacheNames = ["cacheTest3"], allEntries = true) // allEntries = true 필수
+    @Scheduled(fixedDelay = 1 * 1000)  // 1초 만에 삭제해버린다. 스케쥴드에는 파라메터가 있어선 안된다.
+    fun eraseCache() {
     }
 
     fun nonCachedFun(name: String): Response {

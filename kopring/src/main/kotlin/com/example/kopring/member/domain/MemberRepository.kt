@@ -3,7 +3,6 @@ package com.example.kopring.member.domain
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.findByIdOrNull
 
-
 fun MemberRepository.findByMemberId(id: Long): Member =
     findByIdOrNull(id) ?: throw NoSuchElementException("member id가 존재하지 않습니다. id: $id")
 

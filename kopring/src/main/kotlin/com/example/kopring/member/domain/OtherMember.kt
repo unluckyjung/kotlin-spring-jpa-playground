@@ -2,14 +2,17 @@ package com.example.kopring.member.domain
 
 import com.example.kopring.BaseEntity
 import java.time.ZonedDateTime
-import javax.persistence.*
+import javax.persistence.* // ktlint-disable no-wildcard-imports
 import javax.validation.constraints.NotBlank
 
 @Table(name = "members")
 @Entity
-class Member(
-    val name: String,
+class OtherMember(
+//    val name: String,
     createdAt: ZonedDateTime = ZonedDateTime.now(),
+
+//    @Column(nullable = false)
+    val nickName: String,
 
     @Column(name = "member_id")
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

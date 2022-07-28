@@ -45,6 +45,22 @@ class MemberRepositoryTest(
         }
     }
 
+    @DisplayName("entity를 이용해 soft delete 된 member는 조회되지 않는다.")
+    @Test
+    fun memberDeleteTest1() {
+        val member1 = memberRepository.save(Member("jys"))
+        memberRepository.delete(member1)
+        memberRepository.findAll().size shouldBe 1
+    }
+
+    @DisplayName("repository를 이용해 soft delete 된 member는 조회되지 않는다.")
+    @Test
+    fun memberDeleteTest2() {
+        val member1 = memberRepository.save(Member("jys"))
+        memberRepository.delete(member1)
+        memberRepository.findAll().size shouldBe 1
+    }
+
     @DisplayName("외부에서 createdAt 시간을 주입해주면, 현재 시간을 무시하고 주입받은 시간으로 createdAt 시간이 설정된다.")
     @Test
     fun timeDependencyInjectionTest() {
@@ -72,7 +88,7 @@ class MemberRepositoryTest(
                 createdAt = inputKoreaTime
             }
         }
-        val savedMember = memberRepository.save(spyMember)   // inputKoreaTime이 아닌, now()로 시간이 저장된다.
+        val savedMember = memberRepository.save(spyMember) // inputKoreaTime이 아닌, now()로 시간이 저장된다.
 
         savedMember.createdAt shouldBe inputKoreaTime
     }

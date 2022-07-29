@@ -20,7 +20,7 @@ class AsyncConfig {
             this.setRejectedExecutionHandler(ThreadPoolExecutor.CallerRunsPolicy()) // 문제가 발생하는 경우 해당스레드에서 다시 처리 (CallerRunsPolicy)
             this.setWaitForTasksToCompleteOnShutdown(true) // shutdown 당해도 다른 작업 이어서 처리
             this.setAwaitTerminationSeconds(60) // 최대 60초 대기
-            this.setThreadNamePrefix("goodall") // 접두사
+            this.setThreadNamePrefix("goodall task executor") // 접두사
         }
     }
 }

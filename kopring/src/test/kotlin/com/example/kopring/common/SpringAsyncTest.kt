@@ -1,6 +1,7 @@
 package com.example.kopring.common
 
 import com.example.kopring.test.IntegrationTest
+import kotlinx.coroutines.Runnable
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Async
@@ -51,13 +52,28 @@ class SpringAsyncTest(
             println(asyncFunStringFuture.get())
         }
     }
+
+    @Test
+    fun asyncServiceTest() {
+        dummyService.asyncServiceTest()
+    }
 }
 
 
 @Service
-class DummyService {
+class AsyncService {
 
-    @Async("threadPoolTaskExecutor")
+    @Async
+    fun run(runnable: Runnable) {
+        runnable.run()
+    }
+}
+
+@Service
+class DummyService(
+    val asyncService: AsyncService
+) {
+
     fun asyncFun() {
         for (num in 1..10) {
             logger.info("AsyncFun: $num")
@@ -85,12 +101,36 @@ class DummyService {
     // ListenableFuture 상속 형태
     @Async("threadPoolTaskExecutor")
     fun asyncFunStringFuture2(num: Int): Future<String> {
+        print("111")
         return AsyncResult("asyncFunString[2]: $num")
     }
 
     fun syncFunString(num: Int): String {
         return "syncFunString: $num"
     }
+
+    fun asyncServiceTest() {
+        asyncService.run(
+            this::innerMethod1
+        )
+
+        val lamdaVal: () -> Unit = {
+            innerMethod2("async test param")
+        }
+
+        asyncService.run(
+            lamdaVal
+        )
+    }
+
+    private fun innerMethod1() {
+        logger.info("innerMethod2 start: ${Thread.currentThread().name}")
+    }
+
+    private fun innerMethod2(param: String) {
+        logger.info("innerMethod2 start: ${Thread.currentThread().name}, param: $param")
+    }
+
 
     companion object {
         private val logger = LoggerFactory.getLogger(this::class.java)

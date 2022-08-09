@@ -20,13 +20,13 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     // 쿼리파라미터 로그확인용 외부 라이브러리
     implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0")
-
 
     runtimeOnly("com.h2database:h2")
 
@@ -37,7 +37,6 @@ dependencies {
     testImplementation("io.kotest:kotest-property:5.2.3")
     testImplementation("io.mockk:mockk:1.12.3")
     testImplementation("com.ninja-squad:springmockk:3.1.1")
-
 }
 
 tasks.withType<KotlinCompile> {

@@ -5,6 +5,8 @@ import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientRequestException
@@ -13,9 +15,9 @@ import org.springframework.web.reactive.function.client.toEntity
 import reactor.core.publisher.Mono
 
 @IntegrationTest
-class WebClientTest {
-
-    private val webClient = WebClient.builder().build()
+class WebClientTest(
+    private val webClient: WebClient
+) {
     private val googleUrl = "https://www.google.com/"
     private val noExistUrl = "https://www.ddoggle.com/"
     private val notFoundUrl = "https://github.com/unluckyjung1/"
@@ -64,7 +66,6 @@ class WebClientTest {
         }.message shouldContain "400번대 에러 발생"
     }
 
-
     private fun webclientExecute(url: String): Mono<String> {
         val response = webClient.get().uri(url).exchangeToMono {
             if (it.statusCode().isError) {
@@ -80,5 +81,14 @@ class WebClientTest {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(this::class.java)
+    }
+}
+
+@Configuration
+class WebClientConfig {
+
+    @Bean
+    fun myWebClient(): WebClient {
+        return WebClient.builder().build()
     }
 }

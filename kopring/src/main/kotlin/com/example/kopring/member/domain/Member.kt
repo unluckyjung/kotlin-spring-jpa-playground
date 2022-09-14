@@ -2,7 +2,7 @@ package com.example.kopring.member.domain
 
 import com.example.kopring.BaseEntity
 import java.time.ZonedDateTime
-import javax.persistence.*
+import javax.persistence.* // ktlint-disable no-wildcard-imports
 import javax.validation.constraints.NotBlank
 
 @Entity

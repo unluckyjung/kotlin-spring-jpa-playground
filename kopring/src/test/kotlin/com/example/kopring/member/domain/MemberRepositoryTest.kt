@@ -15,10 +15,12 @@ import org.junit.jupiter.params.provider.ValueSource
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
+import javax.persistence.EntityManager
 
 @RepositoryTest
 class MemberRepositoryTest(
-    private val memberRepository: MemberRepository
+    private val memberRepository: MemberRepository,
+    private val entityManager: EntityManager,
 ) {
 
     lateinit var member: Member
@@ -92,5 +94,40 @@ class MemberRepositoryTest(
         val savedMember = memberRepository.save(Member("unluckyjung"))
 
         savedMember.createdAt shouldBe inputKoreaTime.plusDays(plusDay)
+    }
+
+
+    @Test
+    fun findByInfo() {
+        val info = Info(age = 10, nickName = "goodall")
+
+        val member1 = memberRepository.save(
+            Member(
+                name = "embedded test",
+                info = info
+            )
+        )
+
+        entityManager.flush()
+        entityManager.clear()
+
+        member1 shouldBe memberRepository.findByInfo(info)
+    }
+
+    @Test
+    fun findByInfoValue() {
+        val info = Info(age = 10, nickName = "goodall")
+
+        val member1 = memberRepository.save(
+            Member(
+                name = "embedded test",
+                info = info
+            )
+        )
+
+        entityManager.flush()
+        entityManager.clear()
+
+        member1 shouldBe memberRepository.findByInfoNickName(info.nickName)
     }
 }

@@ -10,4 +10,7 @@ fun MemberRepository.findByMemberId(id: Long): Member =
 interface MemberRepository : JpaRepository<Member, Long> {
     fun findByName(name: String): Member?
     fun existsByName(name: String): Boolean
+    fun findByInfo(info: Info): Member?
+
+    fun findByInfoNickName(nickName: String): Member?
 }

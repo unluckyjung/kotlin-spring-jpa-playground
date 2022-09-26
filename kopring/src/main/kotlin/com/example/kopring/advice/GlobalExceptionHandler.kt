@@ -22,15 +22,13 @@ class GlobalExceptionHandler {
     @ExceptionHandler(value = [HttpMessageNotReadableException::class])
     @ResponseBody
     fun dtoTypeMissMatchException(exception: HttpMessageNotReadableException): ResponseEntity<ExceptionDto> {
-        val msg = when (exception.cause) {
+        val msg = when (val causeException = exception.cause) {
             is InvalidFormatException -> {
-                val causeException = exception.cause as InvalidFormatException
                 "입력 받은 ${causeException.value} 를 ${causeException.targetType} 으로 변환중 에러가 발생했습니다."
             }
 
             is MissingKotlinParameterException -> {
-                val causeException = (exception.cause as MissingKotlinParameterException)
-                "Parameter is missing: ${causeException.parameter.name}"
+                "해당 필드는 null 로 오면 안됩니다. 필드명: ${causeException.parameter.name}"
             }
 
             else -> "요청을 역직렬화 하는과정에서 예외가 발생했습니다."

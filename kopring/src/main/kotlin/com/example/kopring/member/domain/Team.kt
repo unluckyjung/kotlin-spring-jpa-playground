@@ -8,7 +8,8 @@ class Team(
     val name: String,
 
     // 연관관계 주인은 MyMember(fk team_id 소유)
-    @OneToMany(mappedBy = "team", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JoinColumn(name = "team_id") // OneToMany 단방향
+    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     val members: MutableList<AbstractMember> = mutableListOf(),
 
     @Column(name = "type")
@@ -21,6 +22,6 @@ class Team(
 ) {
     fun addMember(member: AbstractMember) {
         members.add(member)
-        member.team = this
+//        member.team = this
     }
 }

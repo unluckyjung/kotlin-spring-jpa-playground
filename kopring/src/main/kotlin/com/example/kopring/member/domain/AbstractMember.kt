@@ -9,9 +9,9 @@ import javax.persistence.*
 sealed class AbstractMember(
     val name: String,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    var team: Team? = null,
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "team_id")
+//    var team: Team? = null,
 
     @Column(name = "member_id")
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

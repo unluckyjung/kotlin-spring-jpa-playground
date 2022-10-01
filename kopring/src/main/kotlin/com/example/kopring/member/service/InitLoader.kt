@@ -50,10 +50,10 @@ class InitLoader3(
 
     @Transactional
     override fun run(vararg args: String?) {
-        logger.info("lazyLoading Check======================")
-        val team = teamRepository.findByIdOrNull(1)
-        logger.info("lazyLoading Check======================")
-        logger.info(team!!.members.size.toString())
+        logger.info("lazyLoading Check lazy ======================")
+        val team = teamRepository.findByIdOrNull(1) // member join 쿼리 안나감.
+        logger.info("lazyLoading Check: loading =====================")
+        logger.info("members size : ${team!!.members.size}") // member join query 발생.
     }
 
     companion object {

@@ -29,4 +29,16 @@ class Team(
         members.add(member)
         member.team = this
     }
+
+    fun delete() {
+        // cascade.REMOVE 옵션이 안먹는다.
+        val now = ZonedDateTime.now()
+        deletedAt = now
+
+        // 직접 값을 넣어주어야 한다.
+        // CascadeType.PERSIST 때문에 값 변경이 적용 된다. member 가 직접 변경되는것이라 적용되어짐.
+        members.forEach {
+            it.deletedAt = now
+        }
+    }
 }

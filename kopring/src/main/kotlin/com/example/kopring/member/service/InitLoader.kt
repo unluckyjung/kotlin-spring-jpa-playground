@@ -25,6 +25,11 @@ class InitLoader(
             this.addMember(MyMember("member3"))
             this.addMember(MyMember("member4"))
         }.let(teamRepository::save)
+
+        Team("team3").apply {
+            this.addMember(MyMember("member5"))
+            this.addMember(MyMember("member6"))
+        }.let(teamRepository::save)
     }
 }
 
@@ -51,6 +56,19 @@ class InitLoader3(
     @Transactional
     override fun run(vararg args: String?) {
         teamRepository.deleteById(2L)
+    }
+}
+
+@Order(4)
+@Component
+class InitLoader4(
+    private val teamRepository: TeamRepository,
+) : CommandLineRunner {
+
+    @Transactional
+    override fun run(vararg args: String?) {
+        val team = teamRepository.findAll().lastOrNull()
+        team!!.delete()
     }
 }
 

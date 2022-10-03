@@ -19,13 +19,11 @@ sealed class AbstractMember(
 ) : BaseEntity()
 
 // 엔티티만 존재
-// @Table(name = "my_member")
 @Entity
 @DiscriminatorValue("BLACK")
 class BMember(name: String) : AbstractMember(name = name)
 
 // 엔티티만 존재
-// @Table(name = "my_member")
 @Entity
 @DiscriminatorValue("WHITE")
 class WMember(name: String) : AbstractMember(name = name)

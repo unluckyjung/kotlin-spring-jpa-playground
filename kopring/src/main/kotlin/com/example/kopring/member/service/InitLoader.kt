@@ -1,11 +1,8 @@
 package com.example.kopring.member.service
 
-import com.example.kopring.member.domain.AbstractMemberRepository
-import com.example.kopring.member.domain.BMember
 import com.example.kopring.member.domain.Team
 import com.example.kopring.member.domain.TeamRepository
 import com.example.kopring.member.domain.WMember
-import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
@@ -19,34 +16,13 @@ class InitLoader(
 
     @Transactional
     override fun run(vararg args: String?) {
-        Team("team1").apply {
-            this.addMember(BMember("member1"))
-            this.addMember(BMember("member2"))
-        }.let(teamRepository::save)
-
-        Team("team2", type = false).apply {
-            this.addMember(WMember("member3"))
-            this.addMember(WMember("member4"))
-        }.let(teamRepository::save)
-    }
-}
-
-@Order(2)
-@Component
-class InitLoader2(
-    private val teamRepository: TeamRepository,
-    private val abstractMemberRepository: AbstractMemberRepository,
-) : CommandLineRunner {
-
-    @Transactional
-    override fun run(vararg args: String?) {
-        val members = abstractMemberRepository.findAll()
-        for (member in members) {
-            LOGGER.info("name is : $member.name")
-        }
-    }
-
-    companion object {
-        private val LOGGER = LoggerFactory.getLogger(this::class.java)
+        Team(
+            "team3", type = false,
+            // team.members.member = null 이 저장된다.
+            // member5, 6 은 저장되지도 않는다? (저장되고 있음)
+            members = mutableSetOf(
+                WMember("member5")
+            )
+        ).let(teamRepository::save)
     }
 }

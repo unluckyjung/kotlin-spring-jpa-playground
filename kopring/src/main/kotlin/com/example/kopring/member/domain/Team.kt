@@ -7,10 +7,7 @@ class Team(
     @Column(name = "name")
     val name: String,
 
-    // 연관관계 주인은 MyMember(fk team_id 소유)
-    @JoinColumn(name = "team_id") // OneToMany 단방향
-    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
-    val members: MutableList<AbstractMember> = mutableListOf(),
+    members: MutableSet<AbstractMember>,
 
     @Column(name = "type")
     val type: Boolean = true,
@@ -20,8 +17,11 @@ class Team(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
 ) {
+
+    @Embedded
+    val members = Members(members)
+
     fun addMember(member: AbstractMember) {
         members.add(member)
-//        member.team = this
     }
 }

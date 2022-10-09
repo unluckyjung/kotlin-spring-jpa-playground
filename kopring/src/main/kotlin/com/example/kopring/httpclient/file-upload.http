@@ -1,0 +1,8 @@
+POST http://localhost:8080/api/v1/file/testfile1
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="testCsvFile"
+
+< /Users/yoonsung/source/github/kotlin-spring-jpa-playground/kopring/file-test/test.csv
+--boundary--

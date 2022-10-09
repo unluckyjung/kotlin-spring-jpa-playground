@@ -5,31 +5,30 @@ import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.nio.file.Paths
-import java.util.UUID
+import java.util.*
 
 @Service
 class FileService {
-    fun upload(file: MultipartFile, fileName: String) {
+    fun upload(file: MultipartFile, filename: String) {
         logger.info("file: $file")
-        logger.info("fileName: $fileName")
+        logger.info("filename: $filename")
 
         if (file.isEmpty.not()) {
-            if (file.contentType != TYPE_CSV) return
-
-            val filePath = Paths.get(BASIC_PATH + File.separator + file.originalFilename + UUID.randomUUID() + ".csv")
-            logger.info(filePath.toString())
+//            val filePath = Paths.get(BASIC_PATH + File.separator + file.originalFilename + UUID.randomUUID() + ".csv")
+//            logger.info(filePath.toString())
 //            file.transferTo(filePath.toFile())
 
-//            val path = Paths.get(filePath).toAbsolutePath()
-//            file.transferTo(path.toFile())
-//            File(filePath).writeBytes(file.bytes)
-//            logger.info(filePath)
+            logger.info(Paths.get("").toAbsolutePath().toString())
+
+            val filePath2 =
+                System.getProperty("user.dir") + File.separator + BASIC_PATH + File.separator + file.originalFilename + UUID.randomUUID() + ".csv"
+            file.transferTo(File(filePath2))
         }
     }
 
     companion object {
         private val logger = LoggerFactory.getLogger(this::class.java)
-//        private const val BASIC_PATH =
+        private const val BASIC_PATH = "file-test"
         private const val TYPE_CSV = "text/csv"
     }
 }

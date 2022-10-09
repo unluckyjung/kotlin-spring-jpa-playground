@@ -14,8 +14,8 @@ class MultiPartController(
     private val fileService: FileService,
 ) {
 
-    @PostMapping("/{fileName}")
-    fun upload(@RequestParam file: MultipartFile, @PathVariable fileName: String) {
-        fileService.upload(file, fileName)
+    @PostMapping("/{filename}")
+    fun upload(@RequestParam file: MultipartFile, @PathVariable filename: String) {
+        fileService.upload(file, filename)
     }
 }

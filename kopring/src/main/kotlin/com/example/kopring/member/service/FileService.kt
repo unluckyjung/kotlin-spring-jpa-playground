@@ -9,8 +9,9 @@ import java.util.*
 
 @Service
 class FileService {
-    fun upload(file: MultipartFile, filename: String) {
+    fun upload(id: Long, file: MultipartFile, filename: String) {
         logger.info("file: $file")
+        logger.info("id: $id")
         logger.info("filename: $filename")
 
         if (file.isEmpty.not()) {

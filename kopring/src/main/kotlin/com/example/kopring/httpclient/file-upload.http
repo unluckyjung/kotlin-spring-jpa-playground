@@ -1,8 +1,21 @@
+###
 POST http://localhost:8080/api/v1/file/77?filename="testFilename"
-Content-Type: multipart/form-data; boundary=boundary
+Accept:application/json, text/csv, */*
+Content-Type:multipart/form-data; boundary=boundary
 
 --boundary
-Content-Disposition: form-data; name="file"; filename="testCsvFile"
+Content-Disposition: form-data; name="file"; filename="testCsvFile.csv"
+Content-Type: text/csv
 
-< /Users/yoonsung/source/github/kotlin-spring-jpa-playground/kopring/file-test/test.csv
+< test.csv
+
+--boundary
+Content-Disposition: form-data; name="dto";
+Content-Type: application/json
+
+{
+  "name": "jys",
+  "age": "30"
+}
+
 --boundary--

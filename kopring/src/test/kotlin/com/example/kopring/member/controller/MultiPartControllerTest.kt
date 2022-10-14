@@ -25,6 +25,8 @@ class MultiPartControllerTest(
             "1,2,3".toByteArray()
         )
 
+        val jsonFile = MockMultipartFile("dto", "", "application/json", "{\"name\": \"jys\"}".toByteArray())
+
         val testFilename = "testCodeFile"
         val testId = 1L
 
@@ -32,6 +34,7 @@ class MultiPartControllerTest(
             file(csvFile)
                 // @RequestParam filename: String 처리를 .part 로 해줘야한다.
                 .part(MockPart("filename", testFilename.toByteArray()))
+            file(jsonFile)
         }.andExpect {
             status { isOk() }
         }.andDo { }

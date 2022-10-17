@@ -1,5 +1,5 @@
 ###
-POST http://localhost:8080/api/v1/file/77?filename="testFilename"
+POST http://localhost:8080/api/v1/file/77/attribute?filename="testFilename"
 Accept:application/json, text/csv, */*
 Content-Type: multipart/form-data; boundary=boundary
 
@@ -10,12 +10,12 @@ Content-Type: multipart/form-data
 < test.csv
 
 --boundary
-Content-Disposition: form-data; name="dto";
-Content-Type: application/json
+Content-Disposition: form-data; name="name"
 
-{
-  "name": "jys",
-  "age": "30"
-}
+goodall
 
+--boundary
+Content-Disposition: form-data; name="age"
+
+30
 --boundary--

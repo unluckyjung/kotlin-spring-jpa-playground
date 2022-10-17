@@ -27,14 +27,38 @@ class MultiPartControllerTest(
 
         val jsonFile = MockMultipartFile("dto", "", "application/json", "{\"name\": \"jys\"}".toByteArray())
 
-        val testFilename = "testCodeFile"
+        val testFilename = "testCodeFilename"
         val testId = 1L
 
         mockMvc.multipart("/api/v1/file/$testId") {
             file(csvFile)
-                // @RequestParam filename: String 처리를 .part 로 해줘야한다.
-                .part(MockPart("filename", testFilename.toByteArray()))
+                // @RequestParam filename: String 처리를 .part 로도 가능하다.
+//                .part(MockPart("filename", testFilename.toByteArray()))
+                .param("filename", testFilename)
             file(jsonFile)
+        }.andExpect {
+            status { isOk() }
+        }.andDo { }
+    }
+
+    @DisplayName("파일 업로드 테스트(ModelAttribute)")
+    @Test
+    fun uploadTest2() {
+        val csvFile = MockMultipartFile(
+            "file",
+            "mockFile.csv",
+            "multipart/form-data",
+            "1,2,3".toByteArray()
+        )
+
+        val testFilename = "testCodeFile"
+        val testId = 1L
+
+        mockMvc.multipart("/api/v1/file/$testId/attribute") {
+            file(csvFile)
+                .part(MockPart("name", "jys".toByteArray()))
+                .part(MockPart("age", "30".toByteArray()))
+                .param("filename", testFilename)
         }.andExpect {
             status { isOk() }
         }.andDo { }

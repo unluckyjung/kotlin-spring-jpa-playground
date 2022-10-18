@@ -25,7 +25,7 @@ class MultiPartControllerTest(
             "1,2,3".toByteArray()
         )
 
-        val jsonFile = MockMultipartFile("dto", "", "application/json", "{\"name\": \"jys\"}".toByteArray())
+        val jsonFile = MockMultipartFile("dto", "", "application/json", "{\"name\": \"jys\", \"age\": \"30\"}".toByteArray())
 
         val testFilename = "testCodeFilename"
         val testId = 1L

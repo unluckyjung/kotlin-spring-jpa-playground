@@ -17,7 +17,7 @@ class SpringAsyncTest(
     @Test
     fun asyncTest() {
         dummyService.asyncFun()
-        dummyService.syncFun()
+        dummyService.asyncFun()
     }
 
     @Test
@@ -74,6 +74,7 @@ class DummyService(
     val asyncService: AsyncService
 ) {
 
+    @Async("customThreadPoolTaskExecutor")
     fun asyncFun() {
         for (num in 1..10) {
             logger.info("AsyncFun: $num")
@@ -86,20 +87,19 @@ class DummyService(
         }
     }
 
-    @Async("threadPoolTaskExecutor")
+    @Async("customThreadPoolTaskExecutor")
     fun asyncFunString(num: Int): String {
         return "asyncFunString: $num"
     }
 
     // 두가지의 방법중 어떤것이 general 한 방식인지는 모르겠음
-
-    @Async("threadPoolTaskExecutor")
+    @Async("customThreadPoolTaskExecutor")
     fun asyncFunStringFuture(num: Int): CompletableFuture<String> {
         return CompletableFuture.completedFuture("asyncFunString: $num")
     }
 
     // ListenableFuture 상속 형태
-    @Async("threadPoolTaskExecutor")
+    @Async("customThreadPoolTaskExecutor")
     fun asyncFunStringFuture2(num: Int): Future<String> {
         print("111")
         return AsyncResult("asyncFunString[2]: $num")
@@ -124,7 +124,7 @@ class DummyService(
     }
 
     private fun innerMethod1() {
-        logger.info("innerMethod2 start: ${Thread.currentThread().name}")
+        logger.info("innerMethod1 start: ${Thread.currentThread().name}")
     }
 
     private fun innerMethod2(param: String) {

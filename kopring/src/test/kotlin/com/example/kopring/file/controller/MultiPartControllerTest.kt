@@ -1,4 +1,4 @@
-package com.example.kopring.member.controller
+package com.example.kopring.file.controller
 
 import com.example.kopring.test.IntegrationTest
 import org.junit.jupiter.api.DisplayName

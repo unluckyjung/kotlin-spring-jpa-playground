@@ -39,8 +39,15 @@ class MultiPartController(
         @ModelAttribute dto: EntireDto,
         @RequestParam filename: String
     ) {
-        println(id)
-//        fileService.upload(id, file, dto, filename)
+        fileService.upload(
+            id = id,
+            file = dto.file,
+            dto = RequestDto(
+                name = dto.name,
+                age = dto.age,
+            ),
+            filename = filename,
+        )
     }
 }
 
@@ -52,5 +59,5 @@ data class RequestDto(
 data class EntireDto(
     val file: MultipartFile,
     val name: String,
-    val age: String,
+    val age: Int,
 )

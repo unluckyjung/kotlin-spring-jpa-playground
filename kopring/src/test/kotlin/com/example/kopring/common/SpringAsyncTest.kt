@@ -34,6 +34,27 @@ class SpringAsyncTest(
     }
 }
 
+@IntegrationTest
+class SpringAsyncTest2(
+    private val dummyService: DummyService,
+) {
+    @Import(KopringApplication::class)
+    @Configuration
+    internal class SyncTaskExecutorConfigForTest {
+        @Bean("customThreadPoolTaskExecutor")
+        fun customThreadPoolTaskExecutor(): TaskExecutor {
+            return SyncTaskExecutor()
+        }
+    }
+
+    @Test
+    fun asyncTest() {
+        dummyService.asyncFun()
+
+        ObjectNumber.count shouldBe 1
+    }
+}
+
 @Service
 class DummyService(
 ) {

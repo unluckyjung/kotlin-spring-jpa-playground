@@ -10,8 +10,19 @@ import java.util.concurrent.ThreadPoolExecutor
 
 @Configuration
 @EnableAsync
-// AsyncConfigure 상속은 선택사항
-class AsyncConfig {
+class AsyncConfig : AsyncConfigurer {
+    override fun getAsyncExecutor(): Executor {
+        return ThreadPoolTaskExecutor().apply {
+            this.corePoolSize = 5
+            this.maxPoolSize = 20
+            this.setQueueCapacity(50)
+            this.setRejectedExecutionHandler(ThreadPoolExecutor.CallerRunsPolicy())
+            this.setWaitForTasksToCompleteOnShutdown(true)
+            this.setAwaitTerminationSeconds(60)
+            this.setThreadNamePrefix("default task executor")
+            this.initialize() // @Bean 어노테이션이 없어, 호출이 필수
+        }
+    }
 
     @Bean
     fun customThreadPoolTaskExecutor(): Executor {
@@ -23,23 +34,6 @@ class AsyncConfig {
             this.setWaitForTasksToCompleteOnShutdown(true) // shutdown 당해도 다른 작업 이어서 처리
             this.setAwaitTerminationSeconds(60) // 최대 60초 대기
             this.setThreadNamePrefix("unluckyjung task executor") // 접두사
-        }
-    }
-}
-
-@Configuration
-@EnableAsync
-class DefaultAsyncConfig : AsyncConfigurer {
-    override fun getAsyncExecutor(): Executor {
-        return ThreadPoolTaskExecutor().apply {
-            this.corePoolSize = 5
-            this.maxPoolSize = 20
-            this.setQueueCapacity(50)
-            this.setRejectedExecutionHandler(ThreadPoolExecutor.CallerRunsPolicy())
-            this.setWaitForTasksToCompleteOnShutdown(true)
-            this.setAwaitTerminationSeconds(60)
-            this.setThreadNamePrefix("default task executor")
-            this.initialize() // @Bean 어노테이션이 없어, 호출이 필수
         }
     }
 }

@@ -1,6 +1,8 @@
 package com.example.kopring.member.domain
 
+import com.example.kopring.common.support.jpa.findByIdOrThrow
 import com.example.kopring.test.RepositoryTest
+import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
@@ -42,6 +44,14 @@ class MemberRepositoryTest(
     fun memberGetByIdFailTest() {
         assertThrows<NoSuchElementException> {
             memberRepository.findByMemberId(100L)
+        }
+    }
+
+    @DisplayName("존재하지 않는 id로 조회하면, 예외가 발생한다2")
+    @Test
+    fun findByIdOrThrowTest() {
+        shouldThrowExactly<IllegalArgumentException> {
+            memberRepository.findByIdOrThrow(100L)
         }
     }
 

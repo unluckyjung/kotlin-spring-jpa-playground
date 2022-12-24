@@ -32,7 +32,7 @@ dependencies {
 
     // 쿼리파라미터 로그확인용 외부 라이브러리
     implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0")
-
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.4")
 
     runtimeOnly("com.h2database:h2")
 
@@ -41,9 +41,9 @@ dependencies {
     testImplementation("io.kotest:kotest-runner-junit5:5.2.3")
     testImplementation("io.kotest:kotest-assertions-core:5.2.3")
     testImplementation("io.kotest:kotest-property:5.2.3")
-    testImplementation("io.mockk:mockk:1.12.3")
+    testImplementation("io.mockk:mockk:1.13.2")
     testImplementation("com.ninja-squad:springmockk:3.1.1")
-
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
 }
 
 tasks.withType<KotlinCompile> {

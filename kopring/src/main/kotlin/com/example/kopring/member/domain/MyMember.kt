@@ -12,10 +12,6 @@ import javax.persistence.*
 class MyMember(
     val name: String,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    var team: Team? = null,
-
     @Column(name = "deleted_at")
     var deletedAt: ZonedDateTime? = null,
 

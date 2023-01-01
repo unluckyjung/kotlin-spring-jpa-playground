@@ -13,8 +13,9 @@ class Team(
     @Column(name = "name")
     val name: String,
 
-    // 연관관계 주인은 MyMember(fk team_id 소유)
-    @OneToMany(mappedBy = "team", cascade = [CascadeType.ALL], orphanRemoval = true)
+    // OneToMany 단방향
+    @JoinColumn(name = "team_id")
+    @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     val members: MutableList<MyMember> = mutableListOf(),
 
     @Column(name = "deleted_at")
@@ -27,7 +28,6 @@ class Team(
 ) {
     fun addMember(member: MyMember) {
         members.add(member)
-        member.team = this
     }
 
     fun addAllMember(members: List<MyMember>) {

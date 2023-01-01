@@ -14,7 +14,7 @@ class MyMember(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
-    var team: Team? = null,
+    var team: Team,
 
     @Column(name = "deleted_at")
     var deletedAt: ZonedDateTime? = null,

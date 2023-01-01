@@ -13,26 +13,34 @@ class Team(
     @Column(name = "name")
     val name: String,
 
-    // 연관관계 주인은 MyMember(fk team_id 소유)
-    @OneToMany(mappedBy = "team", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val members: MutableList<MyMember> = mutableListOf(),
-
-    @Column(name = "deleted_at")
-    var deletedAt: ZonedDateTime? = null,
+    members: MutableList<MyMember> = mutableListOf(),
 
     @Column(name = "team_id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
 ) {
+    @Column(name = "deleted_at")
+    var deletedAt: ZonedDateTime? = null
+
+    @Embedded
+    val members: MyMembers = MyMembers(members)
+
     fun addMember(member: MyMember) {
-        members.add(member)
-        member.team = this
+        members.addMember(member)
     }
 
     fun addAllMember(members: List<MyMember>) {
         members.forEach {
             addMember(it)
+        }
+    }
+
+    fun delete() {
+        val now = ZonedDateTime.now()
+        deletedAt = now
+        members.members.forEach {
+            it.deletedAt = now
         }
     }
 }

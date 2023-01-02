@@ -10,16 +10,24 @@ import javax.persistence.*
 @Table(name = "my_member")
 @Entity
 class MyMember(
+    @Column(name = "member_name", nullable = false)
     val name: String,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    var team: Team? = null,
+    @JoinColumn(name = "team_id", nullable = false)
+    var team: Team?,
 
-    @Column(name = "deleted_at")
-    var deletedAt: ZonedDateTime? = null,
+    deletedAt: ZonedDateTime? = null,
 
-    @Column(name = "member_id")
+    @Column(name = "member_id", nullable = false)
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
-)
+) {
+    @Column(name = "deleted_at")
+    var deletedAt: ZonedDateTime? = deletedAt
+        protected set
+
+    fun delete() {
+        deletedAt = ZonedDateTime.now()
+    }
+}

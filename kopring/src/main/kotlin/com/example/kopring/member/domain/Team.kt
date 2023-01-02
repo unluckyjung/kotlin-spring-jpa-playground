@@ -10,29 +10,39 @@ import javax.persistence.*
 @Table(name = "team")
 @Entity
 class Team(
-    @Column(name = "name")
+    @Column(name = "team_name", nullable = false)
     val name: String,
 
     // 연관관계 주인은 MyMember(fk team_id 소유)
     @OneToMany(mappedBy = "team", cascade = [CascadeType.ALL], orphanRemoval = true)
     val members: MutableList<MyMember> = mutableListOf(),
 
-    @Column(name = "deleted_at")
-    var deletedAt: ZonedDateTime? = null,
+    deletedAt: ZonedDateTime? = null,
 
-    @Column(name = "team_id")
+    @Column(name = "team_id", nullable = false)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
 ) {
+    @Column(name = "deleted_at", nullable = true)
+    var deletedAt: ZonedDateTime? = deletedAt
+        protected set
+
     fun addMember(member: MyMember) {
         members.add(member)
         member.team = this
     }
 
-    fun addAllMember(members: List<MyMember>) {
+    fun addAllMembers(members: List<MyMember>) {
         members.forEach {
             addMember(it)
+        }
+    }
+
+    fun delete() {
+        this.deletedAt = ZonedDateTime.now()
+        members.forEach {
+            it.delete()
         }
     }
 }

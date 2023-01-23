@@ -3,6 +3,7 @@ package com.example.kopring.common
 import com.example.kopring.test.IntegrationTest
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.cache.annotation.CacheEvict
@@ -15,6 +16,10 @@ import org.springframework.stereotype.Service
 class CacheTest(
     val dummyService: DummyService
 ) {
+    @BeforeEach
+    internal fun setUp() {
+        Counter.init()
+    }
 
     @DisplayName("캐싱된 결과는 같은 해시코드를 출력한다.")
     @Test
@@ -35,7 +40,7 @@ class CacheTest(
         }
     }
 
-    @DisplayName("캐싱 key 가 객체여도 캐싱된 결과는 같은 해시코드를 출력한다.")
+    @DisplayName("해시코드가 같다면 캐싱 key 가 객체여도 캐싱된 결과는 같은 해시코드를 출력한다.")
     @Test
     fun cacheObjectTest() {
         val req = Request("goodall", 31)
@@ -56,7 +61,7 @@ class CacheTest(
         Counter.count shouldBe 2
     }
 
-    @DisplayName("[캐싱키 명시] 캐싱 key 가 객체여도 캐싱된 결과는 같은 해시코드를 출력한다.")
+    @DisplayName("해시코드가 같다면, [캐싱키 명시] 캐싱 key 가 객체여도 캐싱된 결과는 같은 해시코드를 출력한다.")
     @Test
     fun cacheObjectTest2() {
         val req = Request("goodall", 31)
@@ -68,7 +73,39 @@ class CacheTest(
             cachedValue shouldBe dummyService.cachedObjectFun2(req)
             println("hash: ${dummyService.cachedObjectFun2(req).hashCode()}")
         }
+        Counter.count shouldBe 1
     }
+
+    @DisplayName("새로운 객체이면, spel 기반이라 같은 값을 주어도 캐싱된 결과가 반환되지 않는다.")
+    @Test
+    fun cacheObjectTest3() {
+        // data class 인경우, hashCode 가 같아서 캐싱가능 (예시의 Request 는 일반 class)
+        val req = Request("goodall", 31)
+        val cachedValue = dummyService.cachedObjectFun2(req)
+
+        println("first hash: ${cachedValue.hashCode()}")
+
+        for (i in 1..3) {
+            val newReq = Request("goodall", 31)
+            cachedValue shouldNotBe dummyService.cachedObjectFun2(newReq)
+        }
+        Counter.count shouldBe 4
+    }
+
+    @DisplayName("내부값을 기반으로 캐싱하면 내부값이 같은 객체를 주었을때 캐싱된다.")
+    @Test
+    fun cachedObjectFunByValueTest() {
+        val req = Request("goodall", 31)
+        val cachedValue = dummyService.cachedObjectFunByValue(req)
+        println("first cached hash: ${cachedValue.hashCode()}")
+
+        for (i in 1..3) {
+            val newReq = Request("goodall", 31)
+            cachedValue shouldBe dummyService.cachedObjectFunByValue(newReq)
+        }
+        Counter.count shouldBe 1
+    }
+
 
     @Test
     fun cacheTest2() {
@@ -124,14 +161,20 @@ class DummyService {
         return Response(name)
     }
 
-    @Cacheable(cacheNames = ["cacheTest"]) // object 로 넘겨도 캐싱된다.
+    @Cacheable(cacheNames = ["cacheTest"]) // object 로 넘겨도 캐싱된다. (해시코드 기반)
     fun cachedObjectFun(req: Request): Response {
         Counter.countUp()
         return Response(req.name)
     }
 
-    @Cacheable(cacheNames = ["cacheTest"], key = "#req") // key 값을 몇시하고, object 로 넘겨도 캐싱된다.
+    @Cacheable(cacheNames = ["cacheTest"], key = "#req") // key 값을 몇시하고, object 로 넘겨도 캐싱된다. (해시 코드기반)
     fun cachedObjectFun2(req: Request): Response {
+        Counter.countUp()
+        return Response(req.name)
+    }
+
+    @Cacheable(cacheNames = ["cacheTest3"], key = "#req.age + #req.name") // object 안의 내부키 기반 캐싱
+    fun cachedObjectFunByValue(req: Request): Response {
         Counter.countUp()
         return Response(req.name)
     }
@@ -185,6 +228,10 @@ class Request(
 object Counter {
     var count = 0
         private set
+
+    fun init() {
+        count = 0
+    }
 
     fun countUp() {
         count++

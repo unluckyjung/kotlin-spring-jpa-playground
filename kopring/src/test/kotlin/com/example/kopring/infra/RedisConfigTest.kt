@@ -15,6 +15,7 @@ class RedisConfigTest(
     private val redisTemplate: RedisTemplate<String, Any>,
     private val memberRedisTemplate: RedisTemplate<String, RedisObject>,
     private val hashRedisTemplate: RedisTemplate<Any, Any>,
+    private val hashObjectTemplate: RedisTemplate<String, RedisObject>,
     private val stringRedisTemplate: StringRedisTemplate,
 ) {
     @DisplayName("string 기반의 key")
@@ -90,7 +91,7 @@ class RedisConfigTest(
         val hashKey = "goodall"
         val objectValue = RedisObject("yoonsung", age = 30)
 
-        val hashOperations = hashRedisTemplate.opsForHash<String, RedisObject>()
+        val hashOperations = hashObjectTemplate.opsForHash<String, RedisObject>()
         hashOperations.put(key, hashKey, objectValue)
         hashOperations.get(key, hashKey) shouldBe objectValue
 

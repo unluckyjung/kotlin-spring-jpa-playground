@@ -33,6 +33,7 @@ class RedisConfig(
             // "\xac\xed\x00" 같은 불필요한 해시값을 보지 않기 위해 serializer 설정
             this.keySerializer = StringRedisSerializer()
             this.hashKeySerializer = StringRedisSerializer()
+            this.valueSerializer = StringRedisSerializer()
         }
     }
 
@@ -45,6 +46,15 @@ class RedisConfig(
             this.keySerializer = StringRedisSerializer()
             this.hashKeySerializer = StringRedisSerializer()
             this.hashValueSerializer = StringRedisSerializer()
+        }
+    }
+
+    @Bean
+    fun hashObjectTemplate(): RedisTemplate<*, *> {
+        return RedisTemplate<Any, Any>().apply {
+            this.setConnectionFactory(redisConnectionFactory())
+            this.keySerializer = StringRedisSerializer()
+            this.hashKeySerializer = StringRedisSerializer()
         }
     }
 

@@ -29,6 +29,22 @@ class RedisConfig(
     fun redisTemplate(): RedisTemplate<*, *> {
         return RedisTemplate<Any, Any>().apply {
             this.setConnectionFactory(redisConnectionFactory())
+
+            // "\xac\xed\x00" 같은 불필요한 해시값을 보지 않기 위해 serializer 설정
+            this.keySerializer = StringRedisSerializer()
+            this.hashKeySerializer = StringRedisSerializer()
+        }
+    }
+
+    @Bean
+    fun hashRedisTemplate(): RedisTemplate<*, *> {
+        return RedisTemplate<Any, Any>().apply {
+            this.setConnectionFactory(redisConnectionFactory())
+
+            // "\xac\xed\x00" 같은 불필요한 해시값을 보지 않기 위해 serializer 설정
+            this.keySerializer = StringRedisSerializer()
+            this.hashKeySerializer = StringRedisSerializer()
+            this.hashValueSerializer = StringRedisSerializer()
         }
     }
 
@@ -37,7 +53,10 @@ class RedisConfig(
         return RedisTemplate<Any, Any>().apply {
             this.setConnectionFactory(redisConnectionFactory())
             this.keySerializer = StringRedisSerializer()
+
+            // 직렬화 / 역직렬화시 json(dto) 형태의 값 형태로 저장하기 위한 설정
             this.valueSerializer = Jackson2JsonRedisSerializer(RedisObject::class.java).also {
+                // 디폴트 생성자 처리를위해 명시적으로 코틀린 모듈 ObjectMapper 삽입
                 it.setObjectMapper(jacksonObjectMapper())
             }
         }

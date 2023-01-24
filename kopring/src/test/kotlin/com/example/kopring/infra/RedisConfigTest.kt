@@ -5,7 +5,6 @@ import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.springframework.data.redis.core.HashOperations
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.data.redis.core.ValueOperations
@@ -13,8 +12,9 @@ import java.util.concurrent.TimeUnit
 
 @IntegrationTest
 class RedisConfigTest(
-    private val redisTemplate: RedisTemplate<String, String>,
+    private val redisTemplate: RedisTemplate<String, Any>,
     private val memberRedisTemplate: RedisTemplate<String, RedisObject>,
+    private val hashRedisTemplate: RedisTemplate<Any, Any>,
     private val stringRedisTemplate: StringRedisTemplate,
 ) {
     @DisplayName("string 기반의 key")
@@ -68,7 +68,8 @@ class RedisConfigTest(
     @DisplayName("hash 기반의 key")
     @Test
     fun hashCacheTest() {
-        val hashOperations: HashOperations<String, String, String> = redisTemplate.opsForHash()
+//        val hashOperations: HashOperations<String, String, String> = redisTemplate.opsForHash()
+        val hashOperations = hashRedisTemplate.opsForHash<String, String>()
 
         val key = "hashKey"
         val hashKey = "goodall"
@@ -81,6 +82,23 @@ class RedisConfigTest(
 
         entries[hashKey] shouldBe value
     }
+
+    @DisplayName("hash 기반의 string-object")
+    @Test
+    fun hashCacheObjectTest() {
+        val key = "hash-object-key"
+        val hashKey = "goodall"
+        val objectValue = RedisObject("yoonsung", age = 30)
+
+        val hashOperations = hashRedisTemplate.opsForHash<String, RedisObject>()
+        hashOperations.put(key, hashKey, objectValue)
+        hashOperations.get(key, hashKey) shouldBe objectValue
+
+        val entries = hashOperations.entries(key)
+
+        entries[hashKey] shouldBe objectValue
+    }
+
 
     @DisplayName("key 에 따른 3초후 삭제 옵션을 주면, 3초후 조회되지 않는다.")
     @Test

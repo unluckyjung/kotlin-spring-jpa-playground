@@ -8,14 +8,15 @@ import org.junit.jupiter.api.Test
 import org.springframework.data.redis.core.HashOperations
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.core.StringRedisTemplate
-
+import org.springframework.data.redis.core.ValueOperations
+import java.util.concurrent.TimeUnit
 
 @IntegrationTest
 class RedisConfigTest(
     private val redisTemplate: RedisTemplate<String, String>,
+    private val memberRedisTemplate: RedisTemplate<String, RedisObject>,
     private val stringRedisTemplate: StringRedisTemplate,
 ) {
-
     @DisplayName("string 기반의 key")
     @Test
     fun stringCacheTest() {
@@ -27,9 +28,22 @@ class RedisConfigTest(
         valueOperations[key] shouldBe value
     }
 
+    @DisplayName("key: string, value: ObjectTest")
+    @Test
+    fun stringCacheObjectTest() {
+        val valueOperations: ValueOperations<String, RedisObject> = memberRedisTemplate.opsForValue()
+        val key = "string-object-key"
+        val objectValue = RedisObject("yoonsung", age = 30)
+
+        valueOperations[key] = objectValue
+
+        // 조회 과정에서 문제발생
+        valueOperations[key] shouldBe objectValue
+    }
+
     @DisplayName("stringRedisTemplate 기반의 key")
     @Test
-    fun stringRedisTest() {
+    fun stringRedisObjectTest() {
         val valueOperations = stringRedisTemplate.opsForValue()
         val key = "stringKey"
         val value = "goodall"
@@ -54,7 +68,7 @@ class RedisConfigTest(
     @DisplayName("hash 기반의 key")
     @Test
     fun hashCacheTest() {
-        val hashOperations: HashOperations<String, Any, Any> = redisTemplate.opsForHash()
+        val hashOperations: HashOperations<String, String, String> = redisTemplate.opsForHash()
 
         val key = "hashKey"
         val hashKey = "goodall"
@@ -64,7 +78,24 @@ class RedisConfigTest(
         hashOperations.get(key, hashKey) shouldBe value
 
         val entries = hashOperations.entries(key)
+
         entries[hashKey] shouldBe value
     }
 
+    @DisplayName("key 에 따른 3초후 삭제 옵션을 주면, 3초후 조회되지 않는다.")
+    @Test
+    fun stringRedisDeleteWaitTest() {
+        val valueOperations = stringRedisTemplate.opsForValue()
+        val key = "expireKey"
+        val value = "goodall"
+
+        valueOperations[key] = value
+
+        // 5초뒤 삭제
+        redisTemplate.expire(key, 3, TimeUnit.SECONDS)
+        valueOperations[key] shouldBe value
+
+        Thread.sleep(3500)
+        valueOperations[key] shouldBe null
+    }
 }

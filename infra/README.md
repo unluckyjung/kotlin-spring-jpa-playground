@@ -5,7 +5,7 @@
 ```console
 $ docker-compose up -d
 
-$ docker exec -it local-mysql /bin/bash
+$ docker exec -it mysql /bin/bash
 $ mysql -u root -p
 ```
 

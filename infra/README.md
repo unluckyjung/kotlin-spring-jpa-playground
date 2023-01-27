@@ -1,4 +1,4 @@
-## Mysql
+# Mysql
 
 ### Setting
 
@@ -31,7 +31,7 @@ spring:
 
 <img width="818" alt="image" src="https://user-images.githubusercontent.com/43930419/212459888-baa0fb9c-3429-43c9-af76-a95c80458023.png">
 
-## Redis
+# Redis
 
 ### Setting
 ```console
@@ -67,6 +67,12 @@ $ hdel <key> <hashKey>
 
 ### Spring Connection
 
+```gradle
+// build.gradle.kts
+
+implementation("org.springframework.boot:spring-boot-starter-data-redis")
+```
+
 ```yml
 -- applicaton.yml
 
@@ -74,6 +80,13 @@ spring:
   redis:
     host: localhost
     port: 6379
+```
+
+```kotlin
+@EnableCaching
+@SpringBootApplication
+class KopringApplication
+
 ```
 
 ```kotlin

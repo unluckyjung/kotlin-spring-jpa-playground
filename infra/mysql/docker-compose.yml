@@ -1,0 +1,17 @@
+version: '3'
+services:
+  local-db:
+    image: library/mysql:5.7
+    container_name: mysql
+    host_name: mysql13306
+    restart: always
+    ports:
+      - 13306:3306
+    environment:
+      MYSQL_DATABASE: unluckyjung
+      MYSQL_ROOT_PASSWORD: asdf
+      TZ: Asia/Seoul
+    volumes:
+      - ./db/mysql/data:/var/lib/mysql
+      - ./db/mysql/init:/docker-entrypoint-initdb.
+

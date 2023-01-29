@@ -103,4 +103,12 @@ class MemberRepositoryTest(
 
         savedMember.createdAt shouldBe inputKoreaTime.plusDays(plusDay)
     }
+
+    @DisplayName("custom fun 을 호출할 수 있다.")
+    @Test
+    fun customRepositoryFunTest() {
+        val name = "unluckyjung"
+        val member = Member(name = name)
+        memberRepository.getMemberNameWithPrefix(member) shouldBe "prefix: $name"
+    }
 }

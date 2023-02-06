@@ -149,6 +149,64 @@ class CacheTest(
 
         cachedValue shouldNotBe dummyService.cachedFun3("goodall")
     }
+
+    @DisplayName("name 이 goodall 이 아닌 경우에는 캐싱이 된다.")
+    @Test
+    fun cacheWithConditionTest() {
+        repeat(3) {
+            dummyService.cachedWithCondition(Request("unluckyjung", 30))
+        }
+        Counter.count shouldBe 1
+    }
+
+    @DisplayName("name 이 goodall 인 경우에는 캐싱이 안된다.")
+    @Test
+    fun cacheWithConditionTest2() {
+        repeat(3) {
+            dummyService.cachedWithCondition(Request("goodall", 30))
+        }
+        Counter.count shouldBe 3
+    }
+
+    @DisplayName("condition 으로 함수를 주는경우에도 캐싱이된다.")
+    @Test
+    fun cacheWithMethodConditionTest() {
+        repeat(3) {
+            dummyService.cachedWithConditionFun(
+                Request("goodall", 30, type = CacheType.YES)
+            )
+        }
+        Counter.count shouldBe 1
+
+        Counter.init()
+
+        repeat(2) {
+            dummyService.cachedWithConditionFun(
+                Request("goodall", 30, type = CacheType.NON)
+            )
+        }
+        Counter.count shouldBe 2
+    }
+
+    @DisplayName("unless 로 이름이 10자를 초과하는 경우 캐싱이 되지 않게 할 수 있다.")
+    @Test
+    fun cachedWithUnlessTest() {
+        repeat(3) {
+            dummyService.cachedWithUnless(
+                Request("goodallgoodallgoodall", 30, type = CacheType.YES)
+            )
+        }
+        Counter.count shouldBe 3
+
+        Counter.init()
+
+        repeat(3) {
+            dummyService.cachedWithUnless(
+                Request("goodall", 30, type = CacheType.NON)
+            )
+        }
+        Counter.count shouldBe 1
+    }
 }
 
 //@CacheConfig(cacheNames = ["myCache"])
@@ -194,6 +252,29 @@ class DummyService {
         return Response(req.name)
     }
 
+    @Cacheable(value = ["cacheTest5"], key = "#req.name", condition = "#req.name != 'goodall'")
+    fun cachedWithCondition(req: Request): Response {
+        Counter.countUp()
+        return Response(req.name)
+    }
+
+    @Cacheable(value = ["cacheTest6"], key = "#req.name + #req.type", condition = "#req.isNeedCache() == true")
+    fun cachedWithConditionFun(req: Request): Response {
+        Counter.countUp()
+        return Response(req.name)
+    }
+
+    @Cacheable(value = ["cacheTest7"], key = "#req.name", unless = "#req.name.length() > 10")
+    fun cachedWithUnless(req: Request): Response {
+        // java 기반으로만 사용가능
+        // req.isNeedCache().not() 의 not() 과 같이 kotlin 기반의 메서드는 사용불가
+        // req.type == CacheType.NON 와 같이 Enum 을 주는 경우도 사용불가.
+
+        Counter.countUp()
+        return Response(req.name)
+    }
+
+
     @CachePut(value = ["cacheTest"])
     fun cachePut1(name: String) {
     }
@@ -220,10 +301,20 @@ class Response(
     val name: String
 )
 
+enum class CacheType {
+    NON,
+    YES,
+}
+
 class Request(
     val name: String,
     val age: Int,
-)
+    val type: CacheType = CacheType.NON,
+) {
+    fun isNeedCache(): Boolean {
+        return type == CacheType.YES && name == "goodall"
+    }
+}
 
 object Counter {
     var count = 0

@@ -1,17 +1,35 @@
 ### null 명시 (Param)
 GET http://localhost:8080/api/v1/get-param?age=30&name=null
 
-### null 은 요청이 없음. (Param)
+### null 요청 자체를 생략. (Param)
 GET http://localhost:8080/api/v1/get-param?age=30
+
+
+
+
+### null 요청 자체를 생략 (ModelAttribute)
+GET http://localhost:8080/api/v1/get-model?age=30
 
 ### null 명시 (ModelAttribute)
 GET http://localhost:8080/api/v1/get-model?age=30&name=null
 
-### null 은 요청이 없음. (ModelAttribute)
-GET http://localhost:8080/api/v1/get-model?age=30
 
-### wrong null 은 요청이 없음. (ModelAttribute)
+
+
+### wrong null 요청 자체를 생략. (ModelAttribute)
 GET http://localhost:8080/api/v1/wrong-get-model?age=30
 
 ### [문제가 되는 케이스] wrong null 명시 (ModelAttribute)
 GET http://localhost:8080/api/v1/wrong-get-model?age=30&name=null
+
+
+
+
+### enum 명시 (ModelAttribute + enum)
+GET http://localhost:8080/api/v1/wrong-get-model-with-enum?age=30&enum=GOODALL
+
+### enum null 생략 (ModelAttribute + enum)
+GET http://localhost:8080/api/v1/wrong-get-model-with-enum?age=30
+
+### [문제가 되는 케이스] wrong null 명시 (ModelAttribute + enum)
+GET http://localhost:8080/api/v1/wrong-get-model-with-enum?age=30&enum=null

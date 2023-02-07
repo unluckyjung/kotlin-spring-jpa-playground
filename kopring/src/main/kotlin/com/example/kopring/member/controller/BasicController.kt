@@ -28,6 +28,14 @@ class BasicController {
         // name 에 null 이 명시적으로 차버림. (name 은 NotNull type)
         return "name: ${req.name}"
     }
+
+    @GetMapping("/wrong-get-model-with-enum")
+    fun wrongGetController3(
+        @ModelAttribute req: WrongModelDtoWithEnum
+    ): String {
+        // name 에 null 이 명시적으로 차버림. (name 은 NotNull type)
+        return "name: ${req.enum}"
+    }
 }
 
 class ModelDto(
@@ -41,3 +49,14 @@ class WrongModelDto(
     val age: Int,
     val name: String = "defaultName",
 )
+
+class WrongModelDtoWithEnum(
+    val age: Int,
+    val enum: MyEnum?,
+)
+
+enum class MyEnum {
+    GOODALL,
+    YOON_SUNG,
+    ;
+}

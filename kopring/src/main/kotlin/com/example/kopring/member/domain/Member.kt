@@ -5,12 +5,14 @@ import java.time.ZonedDateTime
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
 
+@Table(name = "member")
 @Entity
 class Member(
+    @Column(name = "name")
     val name: String,
     createdAt: ZonedDateTime = ZonedDateTime.now(),
 
-    @Column(name = "member_id")
+    @Column(name = "id", nullable = false)
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
 ) : BaseEntity(createdAt = createdAt) {

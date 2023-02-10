@@ -5,12 +5,12 @@ import org.hibernate.annotations.Where
 import java.time.ZonedDateTime
 import javax.persistence.*
 
-@SQLDelete(sql = "UPDATE team SET deleted_at = NOW() WHERE team_id = ?")
+@SQLDelete(sql = "UPDATE team SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at is null")
 @Table(name = "team")
 @Entity
 class Team(
-    @Column(name = "team_name", nullable = false)
+    @Column(name = "name", nullable = false)
     val name: String,
 
     // 연관관계 주인은 MyMember(fk team_id 소유)
@@ -19,9 +19,8 @@ class Team(
 
     deletedAt: ZonedDateTime? = null,
 
-    @Column(name = "team_id", nullable = false)
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
 ) {
     @Column(name = "deleted_at", nullable = true)

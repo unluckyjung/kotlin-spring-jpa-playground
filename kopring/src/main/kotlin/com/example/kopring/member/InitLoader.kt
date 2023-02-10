@@ -1,4 +1,4 @@
-package com.example.kopring.member.service
+package com.example.kopring.member
 
 import com.example.kopring.common.support.jpa.findByIdOrThrow
 import com.example.kopring.member.domain.MyMember

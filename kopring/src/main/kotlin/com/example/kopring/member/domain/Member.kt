@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank
 class Member(
     @Column(name = "name")
     val name: String,
+
     createdAt: ZonedDateTime = ZonedDateTime.now(),
 
     @Column(name = "id", nullable = false)
@@ -18,6 +19,11 @@ class Member(
 ) : BaseEntity(createdAt = createdAt) {
     data class Request(
         @field: NotBlank(message = "이름은 공백으로 이루어져있을 수 없습니다.")
-        val name: String
+        val name: String,
+    )
+
+    data class Response(
+        val id: Long,
+        val name: String,
     )
 }

@@ -1,6 +1,8 @@
-package com.example.kopring.member
+package com.example.kopring
 
 import com.example.kopring.common.support.jpa.findByIdOrThrow
+import com.example.kopring.json.domain.JsonEntity
+import com.example.kopring.json.domain.JsonEntityRepository
 import com.example.kopring.member.domain.MyMember
 import com.example.kopring.member.domain.Team
 import com.example.kopring.member.domain.TeamRepository
@@ -106,5 +108,19 @@ class InitLoader5(
             addMember(MyMember("goodall", this))
             addMember(MyMember("unluckyjung", this))
         }
+    }
+}
+
+@Order(6)
+@Component
+class InitLoader6(
+    private val jsonEntityRepository: JsonEntityRepository,
+) : ApplicationRunner {
+    @Transactional
+    override fun run(args: ApplicationArguments?) {
+        val bodyMap = mapOf("name" to "yoonsung", "nick_name" to "goodall")
+        jsonEntityRepository.save(
+            JsonEntity(jsonBody = bodyMap)
+        )
     }
 }

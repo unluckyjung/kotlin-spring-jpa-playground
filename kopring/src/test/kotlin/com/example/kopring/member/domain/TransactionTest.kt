@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 
+
 @IntegrationTest
 class TransactionTest(
     private val saveService: SaveService,
@@ -15,11 +16,11 @@ class TransactionTest(
 ) {
     @Transactional
     @Test
-    fun test() {
-        saveService.test1()
+    fun tx1() {
+        saveService.tx1()
         memberRepository.findAll().size shouldBe 2
 
-        // 왜 조회가 되는것이지?
+        // 조회되는 상황이 다르다.
         teamRepository.findAll().size shouldBe 1
     }
 }
@@ -31,10 +32,15 @@ class SaveService(
 ) {
 
     @Transactional
-    fun test1() {
+    fun tx1() {
+
+        // id 를 넣어서 저장하는 경우 조회안됌
+//        val member = memberRepository.save(Member(id = 100, name = "AA"))
         val member = memberRepository.save(Member(name = "AA"))
 
-        requiredNewService.test2(member)
+        requiredNewService.tx2(member)
+
+        // 여기서 id를 넣는것은 상관없음.
         memberRepository.save(Member(name = "CC"))
     }
 }
@@ -46,9 +52,10 @@ class RequiredNewService(
 ) {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    fun test2(member: Member) {
+    fun tx2(member: Member) {
         println("================${member.id}==================")
 
+        // 여기서 id 를 넣는것은 상관이없음.
         teamRepository.save(Team(name = "BB"))
     }
 }

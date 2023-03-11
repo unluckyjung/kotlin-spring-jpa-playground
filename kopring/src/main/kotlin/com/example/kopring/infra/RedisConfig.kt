@@ -59,7 +59,7 @@ class RedisConfig(
     }
 
     @Bean
-    fun memberRedisTemplate(): RedisTemplate<*, *> {
+    fun objectRedisTemplate(): RedisTemplate<*, *> {
         return RedisTemplate<Any, Any>().apply {
             this.setConnectionFactory(redisConnectionFactory())
             this.keySerializer = StringRedisSerializer()

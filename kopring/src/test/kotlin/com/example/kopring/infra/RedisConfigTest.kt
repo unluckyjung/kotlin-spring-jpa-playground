@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 @IntegrationTest
 class RedisConfigTest(
     private val redisTemplate: RedisTemplate<String, Any>,
-    private val memberRedisTemplate: RedisTemplate<String, RedisObject>,
+    private val objectRedisTemplate: RedisTemplate<String, RedisObject>,
     private val hashRedisTemplate: RedisTemplate<Any, Any>,
     private val hashObjectTemplate: RedisTemplate<String, RedisObject>,
     private val stringRedisTemplate: StringRedisTemplate,
@@ -32,7 +32,7 @@ class RedisConfigTest(
     @DisplayName("key: string, value: ObjectTest")
     @Test
     fun stringCacheObjectTest() {
-        val valueOperations: ValueOperations<String, RedisObject> = memberRedisTemplate.opsForValue()
+        val valueOperations: ValueOperations<String, RedisObject> = objectRedisTemplate.opsForValue()
         val key = "string-object-key"
         val objectValue = RedisObject("yoonsung", age = 30)
 

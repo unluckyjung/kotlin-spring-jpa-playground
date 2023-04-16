@@ -207,6 +207,15 @@ class CacheTest(
         }
         Counter.count shouldBe 1
     }
+
+    @DisplayName("파라메터 없이 캐싱하려면, 함수이름을 Key 값으로 잡아주면 캐싱 된다.")
+    @Test
+    fun cacheNoFunTest(){
+        repeat(4) {
+            dummyService.cacheNoParam()
+        }
+        Counter.count shouldBe 1
+    }
 }
 
 //@CacheConfig(cacheNames = ["myCache"])
@@ -272,6 +281,11 @@ class DummyService {
 
         Counter.countUp()
         return Response(req.name)
+    }
+
+    @Cacheable(value = ["cacheTest8"], key = "#root.method.name")
+    fun cacheNoParam() {
+        Counter.countUp()
     }
 
 

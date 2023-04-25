@@ -13,9 +13,8 @@ class MyMember(
     @Column(name = "name", nullable = false)
     val name: String,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id", nullable = false)
-    var team: Team?,
+    @OneToMany(mappedBy = "myMember", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val mids: MutableList<Mid> = mutableListOf(),
 
     deletedAt: ZonedDateTime? = null,
 
@@ -26,8 +25,4 @@ class MyMember(
     @Column(name = "deleted_at")
     var deletedAt: ZonedDateTime? = deletedAt
         protected set
-
-    fun delete() {
-        deletedAt = ZonedDateTime.now()
-    }
 }

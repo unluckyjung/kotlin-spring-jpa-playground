@@ -15,7 +15,7 @@ class Team(
 
     // 연관관계 주인은 MyMember(fk team_id 소유)
     @OneToMany(mappedBy = "team", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val members: MutableList<MyMember> = mutableListOf(),
+    val mids: MutableList<Mid> = mutableListOf(),
 
     deletedAt: ZonedDateTime? = null,
 
@@ -26,22 +26,4 @@ class Team(
     @Column(name = "deleted_at", nullable = true)
     var deletedAt: ZonedDateTime? = deletedAt
         protected set
-
-    fun addMember(member: MyMember) {
-        members.add(member)
-        member.team = this
-    }
-
-    fun addAllMembers(members: List<MyMember>) {
-        members.forEach {
-            addMember(it)
-        }
-    }
-
-    fun delete() {
-        this.deletedAt = ZonedDateTime.now()
-        members.forEach {
-            it.delete()
-        }
-    }
 }

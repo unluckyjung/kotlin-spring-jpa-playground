@@ -12,13 +12,25 @@ class AopAnnotationTest(
     fun run1Test() {
         aopTestService.run1()
     }
+
+    @Test
+    fun timeStamp1Test() {
+        aopTestService.timeStampRun1()
+    }
 }
 
 
 @Service
-@Hello
 class AopTestService {
+    @Hello
     fun run1() {
         println("run1 running...")
+    }
+
+    @MyTimestamp
+    fun timeStampRun1() {
+        println("timeStampRun1 running...start")
+        Thread.sleep(2000)
+        println("timeStampRun1 running...end")
     }
 }

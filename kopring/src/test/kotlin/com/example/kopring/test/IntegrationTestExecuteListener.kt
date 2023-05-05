@@ -20,6 +20,12 @@ class IntegrationTestExecuteListener : AbstractTestExecutionListener() {
         truncateAllTables(jdbcTemplate, transactionTemplate)
     }
 
+    override fun afterTestMethod(testContext: TestContext) {
+        val jdbcTemplate = getJdbcTemplate(testContext)
+        val transactionTemplate = getTransactionTemplate(testContext)
+        truncateAllTables(jdbcTemplate, transactionTemplate)
+    }
+
     private fun getTransactionTemplate(testContext: TestContext): TransactionTemplate {
         return testContext.applicationContext.getBean(TransactionTemplate::class.java)
     }
@@ -48,11 +54,14 @@ class IntegrationTestExecuteListener : AbstractTestExecutionListener() {
                         tables.add(resultSet.getString("TABLE_NAME"))
                     }
                 }
-                tables.remove("flyway_schema_history")
-                return tables
+                return tables.filter { NOT_DELETE_TABLES.contains(it).not() }
             }
         } catch (exception: SQLException) {
             throw IllegalStateException(exception)
         }
+    }
+
+    companion object {
+        private val NOT_DELETE_TABLES = setOf("flyway_schema_history")
     }
 }

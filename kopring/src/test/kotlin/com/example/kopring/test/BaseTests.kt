@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.TestConstructor
+import org.springframework.test.context.TestExecutionListeners
 import org.springframework.transaction.annotation.Transactional
 
 @Target(AnnotationTarget.CLASS)
@@ -29,3 +30,12 @@ annotation class RepositoryTest
 @SpringBootTest
 @TestEnvironment
 annotation class IntegrationTest
+
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+@TestExecutionListeners(
+    value = [IntegrationTestExecuteListener::class],
+    mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS
+)
+annotation class TruncateAllTables
+

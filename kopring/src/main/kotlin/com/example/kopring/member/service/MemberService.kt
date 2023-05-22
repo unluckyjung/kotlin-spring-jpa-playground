@@ -4,6 +4,8 @@ import com.example.kopring.member.domain.Member
 import com.example.kopring.member.service.application.MemberSave
 import com.example.kopring.member.service.query.MemberFind
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class MemberService(
@@ -26,5 +28,10 @@ class MemberService(
                 name = this.name
             )
         }
+    }
+
+    @Transactional(propagation = Propagation.NEVER)
+    fun noTransactionFun(){
+
     }
 }

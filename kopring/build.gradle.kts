@@ -30,6 +30,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.mariadb.jdbc:mariadb-java-client:2.6.1")
+    implementation("org.springframework.retry:spring-retry:1.3.3")
+    implementation("org.springframework:spring-aspects:5.3.22")
 
     // 쿼리파라미터 로그확인용 외부 라이브러리
     implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0")

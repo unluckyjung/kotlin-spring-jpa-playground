@@ -3,6 +3,8 @@ package com.example.kopring.infra
 import com.example.kopring.test.IntegrationTest
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.data.redis.core.RedisTemplate
@@ -18,6 +20,20 @@ class RedisConfigTest(
     private val hashObjectTemplate: RedisTemplate<String, RedisObject>,
     private val stringRedisTemplate: StringRedisTemplate,
 ) {
+    @BeforeEach
+    internal fun setUp() {
+        flushRedis()
+    }
+
+    @AfterEach
+    internal fun tearDown() {
+        redisTemplate.connectionFactory?.connection?.flushAll()
+    }
+
+    private fun flushRedis() {
+        redisTemplate.connectionFactory?.connection?.flushAll()
+    }
+
     @DisplayName("string 기반의 key")
     @Test
     fun stringCacheTest() {
@@ -117,4 +133,56 @@ class RedisConfigTest(
         Thread.sleep(3500)
         valueOperations[key] shouldBe null
     }
+
+    @DisplayName("valueOperations 를 이용해 key 에 매칭되는 redis 를 삭제할 수 있다.")
+    @Test
+    fun redisDeleteTest1() {
+        val valueOperations = stringRedisTemplate.opsForValue()
+        val key = "willBeDeleteKey"
+        val value = "goodall"
+
+        valueOperations[key] = value
+        valueOperations[key] shouldBe value
+
+        valueOperations.getAndDelete(key)
+        valueOperations[key] shouldBe null
+    }
+
+    @DisplayName("key 에 매칭되는 redis 를 삭제할 수 있다.")
+    @Test
+    fun redisDeleteTest2() {
+        val valueOperations = stringRedisTemplate.opsForValue()
+        val key = "willBeDeleteKey"
+        val value = "goodall"
+
+        valueOperations[key] = value
+        valueOperations[key] shouldBe value
+
+
+        redisTemplate.delete(key)   // redisTemplate 를 이용해 제거도 가능
+        // stringRedisTemplate.delete(key)  // 위와 동일한 기능
+
+        valueOperations[key] shouldBe null
+    }
+
+    @DisplayName("keys 에 매칭되는 redis 를 삭제할 수 있다.")
+    @Test
+    fun redisDeleteTest3() {
+        val valueOperations = stringRedisTemplate.opsForValue()
+        val willBeDeleteKey1 = "willBeDeleteKey1"
+        val willBeDeleteKey2 = "willBeDeleteKey2"
+        val key = "key"
+        val value = "goodall"
+
+        valueOperations[willBeDeleteKey1] = value
+        valueOperations[willBeDeleteKey2] = value
+        valueOperations[key] = value
+
+        stringRedisTemplate.delete(setOf(willBeDeleteKey1, willBeDeleteKey2))
+
+        valueOperations[willBeDeleteKey1] shouldBe null
+        valueOperations[willBeDeleteKey2] shouldBe null
+        valueOperations[key] shouldBe value
+    }
 }
+

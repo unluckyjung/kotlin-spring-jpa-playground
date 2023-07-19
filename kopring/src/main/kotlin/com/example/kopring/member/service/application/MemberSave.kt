@@ -4,6 +4,7 @@ import com.example.kopring.common.support.jpa.findByIdOrThrow
 import com.example.kopring.member.domain.Member
 import com.example.kopring.member.domain.MemberRepository
 import com.example.kopring.member.event.DomainEventPublisher
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
@@ -36,7 +37,8 @@ class MemberSaveEventHandler(
     private val memberRepository: MemberRepository,
 ) {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)  // 앞 작업에서의 커밋이 종료된뒤 처리
-    @Transactional(propagation = Propagation.REQUIRES_NEW)  // 앞에서 트랜잭션이 완료되어 버렸기 떄문에, 여기서 변경작업을 하려면 새로운 트랜잭션을 열어야함.
+    @Transactional
+    @Async("threadPoolTaskExecutor")
     fun onSave(memberSaveEvent: MemberSaveEvent) {
 
         memberRepository.findByIdOrThrow(memberSaveEvent.memberId).run {

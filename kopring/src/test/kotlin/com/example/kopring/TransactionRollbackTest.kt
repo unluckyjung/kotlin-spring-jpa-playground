@@ -129,6 +129,18 @@ class TransactionRollbackTest(
         result.size shouldBe 2
     }
 
+    @DisplayName("[REQUIRED] 하위 서비스에서 트랜잭션 어노테이션이 없을떄 예외가 발생했다면 롤백이 진행되지 않는다.")
+    @Test
+    fun rollbackTest5_2() {
+        transactionRollbackTestServiceParent.requiredAndChildNoTransactionAnnotation(
+            parentMember = parentMember,
+            childMember = childMember,
+            ex = IllegalArgumentException(),
+        )
+        val result = memberRepository.findAll()
+        result.size shouldBe 2
+    }
+
     @DisplayName("[REQUIRED] 하위 서비스에서 예외가 발생하지 않으면, 둘다 저장된다.")
     @Test
     fun rollbackTest6() {
@@ -201,6 +213,21 @@ class TransactionRollbackTestServiceParent(
 
         memberRepository.save(parentMember)
     }
+
+
+    @Transactional
+    fun requiredAndChildNoTransactionAnnotation(parentMember: Member, childMember: Member, ex: Exception?) {
+        memberRepository.save(parentMember)
+
+        try {
+            transactionRollbackTestServiceChild.requiredSaveNoTransactionAnnotation(childMember, ex)
+        } catch (e: Exception) {
+            println("Exception caught")
+        }
+        println("after try-catch...")
+
+        memberRepository.save(parentMember)
+    }
 }
 
 @Service
@@ -234,6 +261,15 @@ class TransactionRollbackTestServiceChild(
             }
         } catch (e: Exception) {
             println("exception throw")
+        }
+    }
+
+
+    fun requiredSaveNoTransactionAnnotation(member: Member, ex: Exception?) {
+        memberRepository.save(member)
+
+        if (ex != null) {
+            throw ex
         }
     }
 }

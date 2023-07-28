@@ -141,6 +141,24 @@ class TransactionRollbackTest(
         result.size shouldBe 2
     }
 
+    @DisplayName("[REQUIRED] UnExpectedRollBackException 이 발생했을때 새로운 트랜잭션에서 작업한 내용은 저장된다.")
+    @Test
+    fun rollbackTest5_3() {
+        val otherTxChildMemberName = "newTxMember"
+
+        shouldThrowExactly<UnexpectedRollbackException> {
+            transactionRollbackTestServiceParent.requiredAndTryCatch2(
+                parentMember = parentMember,
+                childMember = childMember,
+                otherTxChildMember = Member(name = otherTxChildMemberName),
+                ex = IllegalArgumentException(),
+            )
+        }
+        val result = memberRepository.findAll()
+        result.size shouldBe 1
+        result[0].name shouldBe otherTxChildMemberName
+    }
+
     @DisplayName("[REQUIRED] 하위 서비스에서 예외가 발생하지 않으면, 둘다 저장된다.")
     @Test
     fun rollbackTest6() {
@@ -206,6 +224,20 @@ class TransactionRollbackTestServiceParent(
     }
 
     @Transactional
+    fun requiredAndTryCatch2(parentMember: Member, childMember: Member, otherTxChildMember: Member, ex: Exception?) {
+        memberRepository.save(parentMember)
+
+        try {
+            transactionRollbackTestServiceChild.requiredSave(childMember, ex)
+        } catch (e: Exception) {
+            println("Exception caught")
+        }
+        println("after try-catch...")
+
+        transactionRollbackTestServiceChild.requiresNewSave(member = otherTxChildMember)
+    }
+
+    @Transactional
     fun requiredAndTryCatchInChild(parentMember: Member, childMember: Member, ex: Exception?) {
         memberRepository.save(parentMember)
 
@@ -235,7 +267,7 @@ class TransactionRollbackTestServiceChild(
     private val memberRepository: MemberRepository,
 ) {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    fun requiresNewSave(member: Member, ex: Exception?) {
+    fun requiresNewSave(member: Member, ex: Exception? = null) {
         memberRepository.save(member)
 
         if (ex != null) {

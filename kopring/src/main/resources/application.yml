@@ -1,8 +1,10 @@
-
 spring:
   datasource:
     url: jdbc:h2:~/test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
+  redis:
+    host: localhost # container host-name 이랑은 별개이다.
+    port: 6379 # default port
 
   h2:
     console:

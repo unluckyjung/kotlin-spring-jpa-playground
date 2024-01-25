@@ -5,12 +5,17 @@ import java.time.ZonedDateTime
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
 
-@Table(name = "member")
+
+@Table(name = "member", indexes = [Index(name = "idx__name_priority", columnList = "name,priority")])
 @Entity
 class Member(
     name: String,
+    nickName: String = "123",
 
     createdAt: ZonedDateTime = ZonedDateTime.now(),
+
+    @Column(name = "priority", nullable = false)
+    val priority: Int = 0,
 
     @Column(name = "id", nullable = false)
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +24,10 @@ class Member(
 
     @Column(name = "name", nullable = false)
     var name = name
+        protected set
+
+    @Column(name = "nickName", nullable = false)
+    var nickName = nickName
         protected set
 
     fun changeName(name: String) {

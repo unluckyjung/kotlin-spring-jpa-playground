@@ -6,6 +6,7 @@ plugins {
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.spring") version "1.6.21"
     kotlin("plugin.jpa") version "1.6.21"
+    kotlin("kapt") version "1.7.10"
 }
 
 group = "com.example"
@@ -39,6 +40,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.4")
 
     runtimeOnly("com.h2database:h2")
+
+    implementation("org.mapstruct:mapstruct:1.5.4.Final")
+    kapt("org.mapstruct:mapstruct-processor:1.5.4.Final")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")

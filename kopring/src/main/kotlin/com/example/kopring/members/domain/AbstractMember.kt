@@ -1,12 +1,12 @@
 package com.example.kopring.members.domain
 
 import com.example.kopring.BaseEntity
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity(name = "abstract_member")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "DTYPE")
-sealed class AbstractMember(
+abstract class AbstractMember(
     @Column(name = "name")
     val name: String,
 

@@ -1,10 +1,10 @@
 package com.example.kopring
 
 import java.time.ZonedDateTime
-import javax.persistence.Column
-import javax.persistence.MappedSuperclass
-import javax.persistence.PrePersist
-import javax.persistence.PreUpdate
+import jakarta.persistence.Column
+import jakarta.persistence.MappedSuperclass
+import jakarta.persistence.PrePersist
+import jakarta.persistence.PreUpdate
 
 @MappedSuperclass
 abstract class BaseEntity(

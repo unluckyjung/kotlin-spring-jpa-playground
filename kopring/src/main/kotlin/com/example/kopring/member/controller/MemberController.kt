@@ -3,7 +3,7 @@ package com.example.kopring.member.controller
 import com.example.kopring.member.domain.Member
 import com.example.kopring.member.service.MemberService
 import org.springframework.web.bind.annotation.*
-import javax.validation.Valid
+import jakarta.validation.Valid
 
 @RequestMapping("api/v1/member")
 @RestController

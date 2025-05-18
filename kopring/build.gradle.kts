@@ -37,7 +37,7 @@ dependencies {
     implementation("org.mariadb.jdbc:mariadb-java-client:2.7.7")
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework:spring-aspects")
-    implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0")
+    implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.11.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     runtimeOnly("com.h2database:h2")
 

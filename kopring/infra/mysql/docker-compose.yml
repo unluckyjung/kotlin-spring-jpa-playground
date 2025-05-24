@@ -1,9 +1,9 @@
 version: '3'
 services:
   local-db:
-    image: library/mysql:5.7
+    image: mysql:8.0
     container_name: mysql
-    host_name: mysql13306
+    hostname: mysql13306
     restart: always
     ports:
       - 13306:3306

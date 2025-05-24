@@ -177,3 +177,18 @@ hs_err_pid*
 replay_pid*
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,kotlin
+
+
+# ───────────────────────────────────────────────────
+# MySQL 데이터 디렉토리 전체 무시
+infra/mysql/db/mysql/data/
+
+# ───────────────────────────────────────────────────
+# MySQL이 자동으로 만드는 파일 확장자 무시
+#    (인증서·키, 테이블 스페이스, 로그 등)
+*.pem
+*.key
+*.ibd
+*.err
+*.pid
+*.sock

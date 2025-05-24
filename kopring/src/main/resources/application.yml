@@ -1,20 +1,42 @@
+# application.yml
+
+# ────────────────────────────────
+# 1) 공통 설정 (프로파일 상관없이 항상 로드)
 spring:
+  profiles:
+    active: h2       # 기본 활성 프로파일
+  data:
+    redis:
+      host: "localhost"   # Spring Boot 3.x부터는 spring.data.redis로 설정합니다.
+      port: 6379          # default port
+  h2:
+    console:
+      enabled: true
+      path: "/h2-console"
+logging:
+  level:
+    p6spy: debug
+    com.p6spy.engine.spy: debug
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
+      multiline: true
+      logging: slf4j
+
+---
+
+# ────────────────────────────────
+# 2) H2 프로파일
+spring:
+  config:
+    activate:
+      on-profile: h2
   datasource:
     url: "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
     driver-class-name: "org.h2.Driver"
     username: "sa"
     password: ""
-
-  data:
-    redis:
-      host: "localhost"   # Spring Boot 3.x부터는 spring.data.redis로 설정합니다.
-      port: 6379          # default port
-
-  h2:
-    console:
-      enabled: true
-      path: "/h2-console"
-
   jpa:
     hibernate:
       ddl-auto: "create"
@@ -22,16 +44,25 @@ spring:
       hibernate:
         dialect: "org.hibernate.dialect.H2Dialect"
         format_sql: true
-#    show-sql: true
 
-logging:
-  level:
-    p6spy: debug             # p6spy 카테고리 전체 로그 레벨
-    com.p6spy.engine.spy: debug  # 내부 엔진 로그 레벨
+---
 
-decorator:
+# ────────────────────────────────
+# 3) mariadb 프로파일
+spring:
+  config:
+    activate:
+      on-profile: mysql
   datasource:
-    p6spy:
-      enable-logging: true   # SQL 로깅 활성화
-      multiline: true        # 여러 줄 포맷 사용 (선택)
-      logging: slf4j         # slf4j 로거 사용 (기본값)
+    url: "jdbc:mariadb://localhost:13306/unluckyjung?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true"
+    driver-class-name: org.mariadb.jdbc.Driver    # ← MariaDB 드라이버
+    username: "root"
+    password: "asdf"
+  jpa:
+    hibernate:
+      ddl-auto: "create"
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+        format_sql: true
+    show-sql: true

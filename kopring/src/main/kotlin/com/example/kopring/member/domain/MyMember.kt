@@ -3,7 +3,7 @@ package com.example.kopring.member.domain
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import java.time.ZonedDateTime
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Where(clause = "deleted_at is null")
 @SQLDelete(sql = "UPDATE my_member SET deleted_at = NOW() WHERE id = ?")

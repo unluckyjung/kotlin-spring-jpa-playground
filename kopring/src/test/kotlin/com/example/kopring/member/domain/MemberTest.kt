@@ -5,13 +5,13 @@ import io.kotest.matchers.string.shouldMatch
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import javax.validation.Validation
+import jakarta.validation.Validation
 
 class MemberTest {
 
     @DisplayName("Request 테스트")
     @Nested
-    class RequestTest {
+    inner class RequestTest {
         private val validator = Validation.buildDefaultValidatorFactory().validator
 
         @DisplayName("이름이 공백이면 Validation 의 validator 에 예외가 쌓인다.")

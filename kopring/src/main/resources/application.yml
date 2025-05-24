@@ -1,30 +1,37 @@
 spring:
   datasource:
-    url: jdbc:h2:~/test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-  redis:
-    host: localhost # container host-name 이랑은 별개이다.
-    port: 6379 # default port
+    url: "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+    driver-class-name: "org.h2.Driver"
+    username: "sa"
+    password: ""
+
+  data:
+    redis:
+      host: "localhost"   # Spring Boot 3.x부터는 spring.data.redis로 설정합니다.
+      port: 6379          # default port
 
   h2:
     console:
       enabled: true
-      path: /h2-console
+      path: "/h2-console"
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: "create"
     properties:
       hibernate:
+        dialect: "org.hibernate.dialect.H2Dialect"
         format_sql: true
-#        show-sql: true
+#    show-sql: true
 
-logging.level:
-  org.hibernate.SQL: debug
-#  org.hibernate.SQL: trace
-#  org.hibernate.type: trace
+logging:
+  level:
+    p6spy: debug             # p6spy 카테고리 전체 로그 레벨
+    com.p6spy.engine.spy: debug  # 내부 엔진 로그 레벨
 
 decorator:
   datasource:
     p6spy:
-      enable-logging: true  # 기본이 true이다. 운영에선 false로 반드시 잡아야한다.
+      enable-logging: true   # SQL 로깅 활성화
+      multiline: true        # 여러 줄 포맷 사용 (선택)
+      logging: slf4j         # slf4j 로거 사용 (기본값)

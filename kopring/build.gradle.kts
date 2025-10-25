@@ -36,8 +36,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
 
     // Database & Drivers
-    // → let BOM manage mariadb version (3.3.4)
-    implementation("org.mariadb.jdbc:mariadb-java-client")
+    // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
+    implementation("com.mysql:mysql-connector-j:8.3.0")
     runtimeOnly("com.h2database:h2")
 
     // Utilities
